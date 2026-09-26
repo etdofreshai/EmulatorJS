@@ -159,6 +159,18 @@ class EJS_GameManager {
             (this.EJS.rewindEnabled ? "rewind_granularity = 6\n" : "") +
             "savefile_directory = \"/data/saves\"\n";
 
+        const ra = this.EJS.config.retroAchievements;
+        if (ra && ra.username && (ra.token || ra.password)) {
+            // ponytail: RA's API has no CORS, so `host` must be a same-origin proxy (see serve.py /ra/).
+            const q = (v) => '"' + String(v).replace(/"/g, "") + '"';
+            cfg += "cheevos_enable = true\n" +
+                "cheevos_username = " + q(ra.username) + "\n" +
+                (ra.token ? "cheevos_token = " + q(ra.token) + "\n" : "cheevos_password = " + q(ra.password) + "\n") +
+                "cheevos_custom_host = " + q(ra.host || new URL("ra", location.href).href) + "\n" +
+                "cheevos_hardcore_mode_enable = " + (ra.hardcore === true) + "\n" +
+                "cheevos_badges_enable = true\n";
+        }
+
         if (this.EJS.retroarchOpts && Array.isArray(this.EJS.retroarchOpts)) {
             this.EJS.retroarchOpts.forEach(option => {
                 let selected = this.EJS.preGetSetting(option.name);

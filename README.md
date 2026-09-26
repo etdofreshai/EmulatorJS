@@ -59,6 +59,20 @@ To run the project locally for development:
 
 > **Note:** Minify your script files before deploying to a production server to optimize load times and bandwidth. See [Minification Docs](minify/README.md).
 
+### RetroAchievements (experimental)
+Requires cores built with `HAVE_CHEEVOS=1` ([EmulatorJS/RetroArch](https://github.com/EmulatorJS/RetroArch)).
+
+```javascript
+EJS_retroAchievements = {
+    username: "you",
+    token: "...",        // or password: "..."
+    host: "/ra",         // same-origin proxy to retroachievements.org (default: <page dir>/ra)
+    hardcore: false
+};
+```
+
+The RA API sends no CORS headers and rejects browser user agents, so requests must go through a proxy on your origin: `/ra/dorequest.php` to `https://retroachievements.org/dorequest.php`, everything else under `/ra/` to `https://media.retroachievements.org/`. The proxy should set its own `User-Agent` and return RA's JSON error bodies with status 200. `serve.py` includes one for local testing.
+
 ---
 
 ## Community & Support
